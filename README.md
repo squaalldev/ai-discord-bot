@@ -13,7 +13,7 @@ An AI-powered chatbot for Discord using **Spark Engine** to handle chat, search,
 ✅ **AI-Powered Chat** – Have dynamic conversations with Spark Engine  
 🔍 **Web Search** – Fetch real-time search results  
 🎨 **Image Generation** – Create AI-generated images  
-📽️ **Video Assistance** – Get AI-generated video insights  
+📽️ **Video Generation** – Create AI-generated videos 
 ⚡ **Easy Deployment** – Run locally, with Docker, or host on your own server/hosting provider  
 
 ---
