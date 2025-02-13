@@ -41,7 +41,7 @@ An AI-powered chatbot for Discord using **Spark Engine** to handle chat, search,
 
 ---
 
-## **Installation**  
+## **Installation Options**  
 
 ### **1️⃣ Local Setup**  
 
@@ -95,7 +95,7 @@ docker run -p 8080:8080 -v discordsparkengineconfig:/discordsparkengine/configFi
 
 ---
 
-### **3️⃣ Deployment**  
+### **3️⃣ Other Deployment Options**  
 
 To keep your bot running 24/7, you’ll need a hosting provider or server that supports a persistent Node.js process. Some popular options include:
 
