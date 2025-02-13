@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for ai-discord-bot-2 on 2025-02-13T19:55:30Z
+# fly.toml app configuration file generated for ai-discord-bot on 2025-02-13T20:56:51Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'ai-discord-bot-2'
+app = 'ai-discord-bot'
 primary_region = 'dfw'
 
 [build]
