@@ -1,7 +1,7 @@
 import { REST, Routes } from 'discord.js'
 
-import { askQuestion } from '../chatgpt/sparkengine.js';
-import { generateInteractionReply, createEmbedsForImageCommand, createEmbedForRemixCommand } from './discord_helpers.js';
+import { askQuestion } from '../ai/sparkengine.js';
+import { generateInteractionReply } from './discord_helpers.js';
 
 export const commands = [
     {
@@ -74,7 +74,8 @@ export async function handle_interaction_ask(interaction) {
 
     try {
         askQuestion(question, async (content) => {
-            generateInteractionReply(interaction, user, question, false, content);
+            // "chat" command – normal text embed
+            generateInteractionReply(interaction, user, question, "chat", content);
         }, { commandType: "chat" });
     } catch (e) {
         console.error(e);
@@ -88,7 +89,8 @@ export async function handle_interaction_video(interaction) {
 
     try {
         askQuestion(question, async (content) => {
-            generateInteractionReply(interaction, user, question, false, content);
+            // "video" command – will try to extract a video URL and embed it
+            generateInteractionReply(interaction, user, question, "video", content);
         }, { commandType: "video" });
     } catch (e) {
         console.error(e);
@@ -102,7 +104,7 @@ export async function handle_interaction_search(interaction) {
 
     try {
         askQuestion(question, async (content) => {
-            generateInteractionReply(interaction, user, question, false, content);
+            generateInteractionReply(interaction, user, question, "chat", content);
         }, { commandType: "search" });
     } catch (e) {
         console.error(e);
@@ -116,7 +118,8 @@ export async function handle_interaction_image(interaction) {
 
     try {
         askQuestion(prompt, async (content) => {
-            generateInteractionReply(interaction, user, prompt, true, content);
+            // "image" command – will try to extract an image URL and embed it
+            generateInteractionReply(interaction, user, prompt, "image", content);
         }, { commandType: "image" });
     } catch (e) {
         console.error(e);

@@ -2,7 +2,7 @@ import 'dotenv/config'
 import { Client, GatewayIntentBits, Partials, ChannelType } from 'discord.js'
 
 import config from './config/config.js'
-import { askQuestion } from './chatgpt/sparkengine.js'
+import { askQuestion } from './ai/sparkengine.js'
 import { initDiscordCommands, handle_interaction_ask, handle_interaction_image, handle_interaction_video, handle_interaction_search, commandExecuters } from './discord/discord_commands.js'
 import { splitAndSendResponse, MAX_RESPONSE_CHUNK_LENGTH } from './discord/discord_helpers.js'
 import { initDashboard } from './dashboard/dasboard.js'

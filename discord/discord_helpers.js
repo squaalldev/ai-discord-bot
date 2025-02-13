@@ -1,12 +1,9 @@
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js'
-
-import stableDiffusion from '../huggingface/stablediffusion/stableDiffusion.js';
 import config from '../config/config.js';
 
 export const MAX_RESPONSE_CHUNK_LENGTH = 1500
 
 export function createEmbedForAskCommand(user, prompt, response) {
-
     if (prompt.length >= 250) {
         prompt = prompt.slice(0, 250) + "..."
     }
@@ -45,7 +42,7 @@ export function createEmbedsForImageCommand(user, prompt, images) {
                 .setColor(0x0099FF)
                 .setAuthor({ name: user.username })
                 .setTitle(prompt)
-                .setDescription("Image didn't generated for this prompt 😔")
+                .setDescription("Image didn't generate for this prompt 😔")
         )
     }
 
@@ -73,11 +70,9 @@ export function createEmbedsForImageCommand(user, prompt, images) {
         embeds,
         files
     }
-
 }
 
 export function createEmbedForRemixCommand(user, userRemix, prompt, image) {
-
     if (prompt.length >= 250) {
         prompt = prompt.slice(0, 250) + "..."
     }
@@ -116,32 +111,49 @@ export async function splitAndSendResponse(resp, user) {
     }
 }
 
-export async function generateInteractionReply(interaction, user, question, generateImage, content) {
+// This function now accepts a commandType ("chat", "image", or "video")
+// and, if the response contains a URL, embeds that media in the Discord message.
+export async function generateInteractionReply(interaction, user, question, commandType, content) {
     if (config.get("USE_EMBED")) {
-        //embed
-        const embed = createEmbedForAskCommand(user, question, content)
-        await interaction.editReply({ embeds: [embed] }).catch(() => { })
-        if(generateImage) {
-        let stableDiffusionPrompt = content.slice(0, Math.min(content.length, 200))
-        stableDiffusion.generate(stableDiffusionPrompt, async (result) => {
-            const results = result.results
-            if (!results || results.length == 0) {
-                return;
+        let embed;
+        // Helper: extract the first URL found in the text
+        function extractURL(text) {
+            const urlRegex = /(https?:\/\/[^\s]+)/;
+            const match = text.match(urlRegex);
+            return match ? match[0] : null;
+        }
+        
+        if (commandType === "image") {
+            const url = extractURL(content);
+            embed = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setAuthor({ name: user.username })
+                .setTitle(question)
+                .setDescription(content.replace(url ? url : "", "").trim() || "Image generated");
+            if (url) {
+                embed.setImage(url);
             }
-            let data = result.results[0].split(",")[1]
-            const buffer = Buffer.from(data, "base64")
-            let attachment = new AttachmentBuilder(buffer, { name: "result0.jpg" })
-            embed.setImage("attachment://result0.jpg")
-            await interaction.editReply({ embeds: [embed], files: [attachment] }).catch(() => { })
-        })
-       }
+        } else if (commandType === "video") {
+            const url = extractURL(content);
+            embed = new EmbedBuilder()
+                .setColor(0x0099FF)
+                .setAuthor({ name: user.username })
+                .setTitle(question)
+                .setDescription(content.replace(url ? url : "", "").trim() || "Video generated");
+            if (url) {
+                embed.setVideo({ url: url });
+            }
+        } else {
+            // Default for chat/search commands
+            embed = createEmbedForAskCommand(user, question, content);
+        }
+        await interaction.editReply({ embeds: [embed] }).catch(() => {});
     } else {
-        //normal message
         if (content.length >= MAX_RESPONSE_CHUNK_LENGTH) {
             const attachment = new AttachmentBuilder(Buffer.from(content, 'utf-8'), { name: 'response.txt' });
-            await interaction.editReply({ files: [attachment] }).catch(() => { })
+            await interaction.editReply({ files: [attachment] }).catch(() => {});
         } else {
-            await interaction.editReply({ content }).catch(() => { })
+            await interaction.editReply({ content }).catch(() => {});
         }
     }
 }
