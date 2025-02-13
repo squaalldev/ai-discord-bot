@@ -1,0 +1,7 @@
+{
+    "MAX_TOKEN": 1000,
+    "ENABLE_DIRECT_MESSAGES": false,
+    "CONVERSATION_START_PROMPT": "",
+    "USE_EMBED": true
+  }
+  
