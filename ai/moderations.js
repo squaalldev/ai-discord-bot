@@ -9,5 +9,11 @@ export default async function Moderations(input) {
             body: JSON.stringify({input})
         })
     res = await res.json()
+
+    if (!res.results || res.results.length === 0) {
+        console.error("No results from moderation API:", res)
+        return false // Devuelve falso si no hay resultados
+    }
+
     return res.results[0].flagged
 }
